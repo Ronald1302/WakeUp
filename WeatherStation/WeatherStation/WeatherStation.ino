@@ -3,7 +3,7 @@
 #include <SPI.h>
 #include <RFM69.h>
 #include <Adafruit_Sensor.h>
-#include <Adafruit_BMP280.h>
+#include <Adafruit_BME280.h>
 #include <Adafruit_TSL2561_U.h>
 
 #define INTERVAL      1000
@@ -21,8 +21,8 @@
 #define RFM69_RST     9
 RFM69 radio = RFM69(RFM69_CS, RFM69_IRQ, IS_RFM69HW, RFM69_IRQN);
 
-// BMP280 temperature/pressure
-Adafruit_BMP280 bme;
+// BME280 temperature/pressure/humidity
+Adafruit_BME280 bme;
 
 // TSL2561 Lumosity
 Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 12345);
@@ -36,9 +36,9 @@ void setup() {
   Serial.begin(115200);
   Serial.println("RFM69H Transmitter");
 
-  // Init BMP280
+  // Init BME280
   if(!bme.begin()) {
-    Serial.println("BMP280 not found");
+    Serial.println("BME280 not found");
   }
 
   // Init TSL2561
@@ -53,7 +53,8 @@ void setup() {
   radio.setPowerLevel(31);
   radio.encrypt(ENCRYPTKEY);
   
-  Serial.println("Temperature;Pressure;Lumosity;Voltage;");
+  Serial.println("Temperature;Pressure;Humidity;Lumosity;Voltage;");
+  delay(INTERVAL);
 }
 
 
@@ -71,6 +72,12 @@ void loop() {
   
   // Pressure
   valueF = bme.readPressure();
+  dtostrf(valueF, 9, 2, buf);
+  strcat(radiopacket, buf);
+  strcat(radiopacket, ";");
+
+  // Humidity
+  valueF = bme.readHumidity();
   dtostrf(valueF, 9, 2, buf);
   strcat(radiopacket, buf);
   strcat(radiopacket, ";");
