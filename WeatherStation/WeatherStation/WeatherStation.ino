@@ -5,7 +5,6 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BMP280.h>
 #include <Adafruit_TSL2561_U.h>
-#include "DHT.h"
 
 #define INTERVAL      1000
 
@@ -28,11 +27,6 @@ Adafruit_BMP280 bme;
 // TSL2561 Lumosity
 Adafruit_TSL2561_Unified tsl = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 12345);
 
-// DHT-22 temperature/humidity sensor
-#define DHTPIN 3
-#define DHTTYPE DHT22
-DHT dht(DHTPIN, DHTTYPE);
-
 // Voltage
 #define PIN_VOLTAGE   A1
 
@@ -43,10 +37,14 @@ void setup() {
   Serial.println("RFM69H Transmitter");
 
   // Init BMP280
-  bme.begin();
+  if(!bme.begin()) {
+    Serial.println("BMP280 not found");
+  }
 
   // Init TSL2561
-  tsl.begin();
+  if(!tsl.begin()) {
+    Serial.println("TSL2561 not found");
+  }
   tsl.enableAutoRange(true);
   tsl.setIntegrationTime(TSL2561_INTEGRATIONTIME_101MS);
 
@@ -54,11 +52,8 @@ void setup() {
   radio.initialize(FREQUENCY,NODEID,NETWORKID);
   radio.setPowerLevel(31);
   radio.encrypt(ENCRYPTKEY);
-
-  // Init DHT-22
-  dht.begin();
   
-  Serial.println("Temperature;Pressure;Lumosity;Humidity;Temperature;Voltage;");
+  Serial.println("Temperature;Pressure;Lumosity;Voltage;");
 }
 
 
@@ -85,18 +80,6 @@ void loop() {
   tsl.getEvent(&event);
   valueF = event.light;
   dtostrf(valueF, 5, 0, buf);
-  strcat(radiopacket, buf);
-  strcat(radiopacket, ";");
-
-  // Humidity
-  valueF = dht.readHumidity();
-  dtostrf(valueF, 5, 2, buf);
-  strcat(radiopacket, buf);
-  strcat(radiopacket, ";");
-
-  // Temperature
-  valueF = dht.readTemperature();
-  dtostrf(valueF, 5, 2, buf);
   strcat(radiopacket, buf);
   strcat(radiopacket, ";");
 
