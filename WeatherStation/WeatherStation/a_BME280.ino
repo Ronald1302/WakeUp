@@ -8,17 +8,10 @@
 #define BME_SET_CONFIG  0x50 // Filter off, 0.5ms ts, I2C
 #define BME_T_MEAS      15   // Measurement time in ms (max)
 
-<<<<<<< HEAD
 /* ========= External variables ========== */
 extern uint16_t temperature = 0;  /* T = (T-32768)/100 [*C] */
 extern uint32_t pressure = 0;     /* P = P [Pa] */
 extern uint32_t humidity = 0;     /* H = H/100 [%] */
-=======
-/* =========================== External variables ============================ */
-extern int32_t temperature = 0;
-extern uint32_t pressure = 0;
-extern uint32_t humidity = 0;
->>>>>>> origin/master
 
 /* =========================== BME-related variables ============================ */
 uint8_t BME_CAL_H1,BME_CAL_H3,BME_CAL_H6;

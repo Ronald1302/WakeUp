@@ -1,14 +1,9 @@
 /* =========================== Defines ============================ */
 #define PIN_VOLTAGE   A1
-<<<<<<< HEAD
 #define VOLTAGE_CORR  47373 // Vdd/ch/(R2/(R1+R2))
 
-extern uint16_t voltage = 0;
-=======
-
 /* =========================== External variables ============================ */
-extern float voltage = 0;
->>>>>>> origin/master
+extern uint16_t voltage = 0;
 
 /* =========================== Read ============================ */
 float voltage_Read() {
