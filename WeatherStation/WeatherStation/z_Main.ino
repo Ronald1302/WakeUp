@@ -1,13 +1,9 @@
-#include <string.h>
-#include <Wire.h>
-
 #define INTERVAL      1000
-
 
 void setup() {
   while (!Serial);
   Serial.begin(115200);
-  Serial.println("RFM69H Transmitter");
+  Serial.println("WeatherStation");
 
   BME_Setup();
   TSL_Setup();
@@ -20,15 +16,19 @@ void setup() {
 
 
 void loop() {
-  // Read data
-  BME_Read();
+  // Start measurement aquisition
+  BME_Start();
   TSL_Read();
   voltage_Read();
+  delay(BME_T_MEAS);
+
+  // Collect measurement data
+  BME_Read();
 
   // Sent data
   RFM_Transmit();
 
   // Finish loop
   Serial.flush();
-  delay(INTERVAL);
+  delay(INTERVAL-BME_T_MEAS);
 }
