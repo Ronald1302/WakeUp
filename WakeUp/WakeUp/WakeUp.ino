@@ -51,7 +51,7 @@ void setup() {
     Serial.println("Card failed, or not present");
   }
 
-  Serial.println("Date;Time;Temperature;Pressure;Lumosity;Humidity;Temperature;Voltage;");
+  Serial.println("Date;Time;Signal;Temperature;Pressure;Humidity;Lumosity;Voltage;");
 }
 
 void loop() {
@@ -59,6 +59,17 @@ void loop() {
       if (radio.ACKRequested()) {
         radio.sendACK();
       }
+
+      uint16_t temperature, lumosity, voltage;
+      uint32_t pressure, humidity;
+
+      sscanf(radio.DATA, "%u %lu %lu %u %u", &temperature, &pressure, &humidity, &lumosity, &voltage);
+
+      Serial.println((float)((temperature-32768)/100));
+      Serial.println(pressure);
+      Serial.println((float)(humidity/100));
+      Serial.println(lumosity);
+      Serial.println((float)(voltage/10000));
 
 
       // Setup vars
@@ -92,7 +103,8 @@ void loop() {
       // Save to SD
       File dataFile = SD.open("datalog.txt", FILE_WRITE);
       if (dataFile) {
-        dataFile.println((char*)radio.DATA);
+        //dataFile.println((char*)radio.DATA);
+        dataFile.println(temp);
         dataFile.close();
       }
   }
