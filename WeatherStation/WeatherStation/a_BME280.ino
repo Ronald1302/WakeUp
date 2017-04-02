@@ -1,23 +1,31 @@
+/* =========================== Includes ============================ */
 #include <Wire.h>
 
-/* ========= Defines ========== */
+/* =========================== Defines ============================ */
 #define BME_ADDRESS     0x76 // I2C address of sensor
 #define BME_SET_MEAS    0x25 // Forced mode, 1x oversampling (t&p)
 #define BME_SET_HUM     0x01 // 1x oversampling
 #define BME_SET_CONFIG  0x50 // Filter off, 0.5ms ts, I2C
 #define BME_T_MEAS      15   // Measurement time in ms (max)
 
+<<<<<<< HEAD
 /* ========= External variables ========== */
 extern uint16_t temperature = 0;  /* T = (T-32768)/100 [*C] */
 extern uint32_t pressure = 0;     /* P = P [Pa] */
 extern uint32_t humidity = 0;     /* H = H/100 [%] */
+=======
+/* =========================== External variables ============================ */
+extern int32_t temperature = 0;
+extern uint32_t pressure = 0;
+extern uint32_t humidity = 0;
+>>>>>>> origin/master
 
-/* ========= BME-related variables ========== */
+/* =========================== BME-related variables ============================ */
 uint8_t BME_CAL_H1,BME_CAL_H3,BME_CAL_H6;
 uint16_t BME_CAL_T1, BME_CAL_P1;
 int16_t BME_CAL_T2,BME_CAL_T3, BME_CAL_P2,BME_CAL_P3,BME_CAL_P4,BME_CAL_P5,BME_CAL_P6,BME_CAL_P7,BME_CAL_P8,BME_CAL_P9, BME_CAL_H2,BME_CAL_H4,BME_CAL_H5;
 
-/* ========= Functions ========== */
+/* =========================== Setup ============================ */
 void BME_Setup() {
   /*
    * Function to setup the BME sensor. Sets measurement settings and collects calibration data
@@ -70,6 +78,7 @@ void BME_Setup() {
   BME_CAL_H6 = Wire.read();
 }
 
+/* =========================== Start ============================ */
 void BME_Start() {
   /*
    * Method to start a measurement with the BME sensor.
@@ -82,6 +91,7 @@ void BME_Start() {
   Wire.endTransmission();
 }
 
+/* =========================== Read ============================ */
 void BME_Read() {
   /*
    * Function to retrieve and calculate the measured temperature, pressure and humidity.

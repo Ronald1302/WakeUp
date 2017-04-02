@@ -1,6 +1,7 @@
+/* =========================== Includes ============================ */
 #include <Wire.h>
 
-/* ========= Defines ========== */
+/* =========================== Defines ============================ */
 #define TSL_ADDRESS       0x39
 #define TSL_CONFIG        0x01  // 1x gain, 101ms meas. time
 #define TSL_T_MEAS        150   // Measurement time in ms (max)
@@ -30,10 +31,10 @@
 #define TSL2561_LUX_B8T   (0x0000)  // 0.000 * 2^LUX_SCALE
 #define TSL2561_LUX_M8T   (0x0000)  // 0.000 * 2^LUX_SCALE
 
-/* ========= External variables ========== */
+/* =========================== External variables ============================ */
 extern uint16_t lumosity = 0;
 
-/* ========= Functions ========== */
+/* =========================== Start ============================ */
 void TSL_Start() {
   /*
    * A function to start a single measurement
@@ -50,6 +51,7 @@ void TSL_Start() {
   Wire.endTransmission();
 }
 
+/* =========================== Read ============================ */
 void TSL_Read() {
   /*
    * A function to collect the measurement data.
