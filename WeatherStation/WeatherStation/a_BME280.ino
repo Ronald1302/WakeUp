@@ -8,9 +8,9 @@
 #define BME_T_MEAS      15   // Measurement time in ms (max)
 
 /* ========= External variables ========== */
-extern int32_t temperature = 0;
-extern uint32_t pressure = 0;
-extern uint32_t humidity = 0;
+extern uint16_t temperature = 0;  /* T = (T-32768)/100 [*C] */
+extern uint32_t pressure = 0;     /* P = P [Pa] */
+extern uint32_t humidity = 0;     /* H = H/100 [%] */
 
 /* ========= BME-related variables ========== */
 uint8_t BME_CAL_H1,BME_CAL_H3,BME_CAL_H6;
@@ -109,7 +109,7 @@ void BME_Read() {
   int32_t T_var1 = ((((ut>>3) - ((int32_t)BME_CAL_T1<<1))) * ((int32_t)BME_CAL_T2)) >> 11;
   int32_t T_var2 = (((((ut>>4) - ((int32_t)BME_CAL_T1)) * ((ut>>4) - ((int32_t)BME_CAL_T1))) >> 12) * ((int32_t)BME_CAL_T3)) >> 14;
   int32_t T_var3 = T_var1 + T_var2;
-  temperature = (T_var3*5+128) >> 8;
+  temperature = ((T_var3*5+128) >> 8)+32768;
   
   // Calculate pressure
   int64_t P_var3 = 0;
@@ -137,5 +137,5 @@ void BME_Read() {
   H_var1 = (H_var1 - (((((H_var1 >> 15) * (H_var1 >> 15)) >> 7) * ((int32_t)BME_CAL_H1)) >> 4));
   H_var1 = (H_var1 < 0 ? 0 : H_var1);
   H_var1 = (H_var1 > 419430400 ? 419430400 : H_var1);
-  humidity = (uint32_t)(H_var1>>12);
+  humidity = (uint32_t)((H_var1>>12)*100/1024);
 }

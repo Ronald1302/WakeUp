@@ -1,10 +1,10 @@
 #define PIN_VOLTAGE   A1
-extern float voltage = 0;
+#define VOLTAGE_CORR  47373 // Vdd/ch/(R2/(R1+R2))
 
-void voltage_Setup() {
-  
-}
+extern uint16_t voltage = 0;
 
 float voltage_Read() {
-  voltage = analogRead(PIN_VOLTAGE)*3.3/1024;
+  float temp = analogRead(PIN_VOLTAGE);
+  temp = temp * 47373 / 1000;
+  voltage = (uint16_t)temp;
 }

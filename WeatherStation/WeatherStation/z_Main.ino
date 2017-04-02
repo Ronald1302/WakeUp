@@ -6,7 +6,6 @@ void setup() {
   Serial.println("WeatherStation");
 
   BME_Setup();
-  voltage_Setup();
   RFM_Setup();
 
   Serial.println("Temperature;Pressure;Humidity;Lumosity;Voltage;");

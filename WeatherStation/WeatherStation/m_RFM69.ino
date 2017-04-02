@@ -3,6 +3,7 @@
 #include <SPI.h>
 #include <RFM69.h>
 
+#define DEBUG
 
 // FRM69
 #define NETWORKID     100
@@ -28,38 +29,42 @@ void RFM_Setup() {
 
 bool RFM_Transmit() {
   // Prepare message
-  char buf[10];
+  char buf[11];
   char radiopacket[64] = {0};
 
   // Temperature
-  dtostrf(temperature, 5, 2, buf);
+  sprintf(buf, "%.5u", temperature);
   strcat(radiopacket, buf);
   strcat(radiopacket, ";");
-  
+
   // Pressure
-  dtostrf(pressure, 9, 2, buf);
+  sprintf(buf, "%.6lu", pressure);
   strcat(radiopacket, buf);
   strcat(radiopacket, ";");
 
   // Humidity
-  dtostrf(humidity, 9, 2, buf);
+  sprintf(buf, "%0.4lu", humidity);
   strcat(radiopacket, buf);
   strcat(radiopacket, ";");
 
   // Lumosity
-  dtostrf(lumosity, 5, 0, buf);
+  sprintf(buf, "%.5u", lumosity);
   strcat(radiopacket, buf);
   strcat(radiopacket, ";");
 
-  // Voltage (battery)
-  dtostrf(voltage, 4, 2, buf);
+  // Voltage
+  sprintf(buf, "%.5u", voltage);
   strcat(radiopacket, buf);
   strcat(radiopacket, ";");
 
-  Serial.print("Sending: ");
-  Serial.println(radiopacket);
+  #ifdef DEBUG
+    Serial.print("Sending: ");
+    Serial.println(radiopacket);
+  #endif
   if (radio.sendWithRetry(RECEIVER, radiopacket, strlen(radiopacket))) {
-    Serial.println("Data send and received!");
+    #ifdef DEBUG
+      Serial.println("Data send and received!");
+    #endif
   }
   radio.receiveDone();
 
