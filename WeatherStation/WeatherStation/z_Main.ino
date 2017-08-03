@@ -28,6 +28,7 @@ void loop() {
 
   // Sent data
   RFM_Transmit();
+  Serial.println("test");
 
   // Finish loop
   Serial.flush();
